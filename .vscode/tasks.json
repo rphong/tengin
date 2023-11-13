@@ -13,7 +13,7 @@
         "${workspaceFolder}\\src\\*.cpp",
         "-lglfw3dll",
         "-o",
-        "${workspaceFolder}\\src\\myprogram.exe"
+        "${workspaceFolder}\\bin\\myprogram.exe"
       ],
       "options": {
         "cwd": "${fileDirname}"
