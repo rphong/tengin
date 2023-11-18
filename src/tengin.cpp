@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <array>
-#include "utility/shader.hpp"
+#include "graphics/shader.hpp"
 
 const unsigned int WIDTH = 1200; 
 const unsigned int HEIGHT = 900; 
