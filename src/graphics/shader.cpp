@@ -52,7 +52,6 @@ Shader::Shader(const std::string& vertexPath, const std::string fragmentPath) {
     glLinkProgram(m_ID);
     glGetProgramiv(m_ID, GL_LINK_STATUS, &success);
     if (!success) {
-        std::cout << "hello linking failed" << std::endl;
         printError("PROGRAM", GL_LINK_STATUS);
     }
 
