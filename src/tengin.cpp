@@ -12,8 +12,8 @@
 #include <array>
 #include "graphics/shader.hpp"
 
-const unsigned int WIDTH = 1200; 
-const unsigned int HEIGHT = 900; 
+const unsigned int WIDTH = 1200;
+const unsigned int HEIGHT = 900;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, height, width);
@@ -43,20 +43,17 @@ int main() {
 
     const float bgVert[] = {
         -0.8f, -0.8f, 0.0f, 0.0f, 0.0f,
-        -0.8f,  0.8f, 0.0f, 0.0f, 1.0f, 
-         0.8f,  0.8f, 0.0f, 1.0f, 1.0f,
-         0.8f, -0.8f, 0.0f, 1.0f, 0.0f
-    };
+        -0.8f, 0.8f, 0.0f, 0.0f, 1.0f,
+        0.8f, 0.8f, 0.0f, 1.0f, 1.0f,
+        0.8f, -0.8f, 0.0f, 1.0f, 0.0f};
     const float tankVert[] = {
         -0.2f, -0.2f, 0.0f, 0.0f, 0.0f,
-        -0.2f, -0.1f, 0.0f, 0.0f, 1.0f, 
+        -0.2f, -0.1f, 0.0f, 0.0f, 1.0f,
         -0.1f, -0.1f, 0.0f, 1.0f, 1.0f,
-        -0.1f, -0.2f, 0.0f, 1.0f, 0.0f
-    };
+        -0.1f, -0.2f, 0.0f, 1.0f, 0.0f};
     unsigned int indicies[] = {
         0, 1, 2,
-        2, 0, 3
-    };
+        2, 0, 3};
 
     unsigned int EBO;
     // To draw multiple objects, bind corresponding VAO, then draw
@@ -70,7 +67,7 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(bgVert), bgVert, GL_STATIC_DRAW);
-    
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
 
@@ -79,7 +76,6 @@ int main() {
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
 
     glBindVertexArray(VAOs[1]);
 
@@ -94,7 +90,6 @@ int main() {
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
 
     std::array<GLuint, 2> textures;
     glGenTextures(textures.size(), &textures[0]);
@@ -125,7 +120,7 @@ int main() {
     // Filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
+
     data = stbi_load("./textures/green_tank.png", &width, &height, &nrChannels, STBI_rgb_alpha);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
@@ -139,13 +134,25 @@ int main() {
 
     shader.use();
 
+    const glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
+    shader.setMat4("projection", projection);
+    
+    const glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
+                       glm::vec3(0.0f, 0.0f, 0.0f),
+                       glm::vec3(0.0f, 1.0f, 0.0f));
+    shader.setMat4("view", view);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(0.0f));
+    shader.setMat4("model", model);
+
     while (!glfwWindowShouldClose(window)) {
         // Rendering commands
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();
-        
+
         // Enable transparency
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -173,7 +180,6 @@ int main() {
     glDeleteBuffers(VBOs.size(), &VBOs[0]);
     glDeleteBuffers(1, &EBO);
     glfwTerminate();
-
 
     return 0;
 }
