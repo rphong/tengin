@@ -12,6 +12,7 @@
         "${workspaceFolder}\\include\\glad.c",
         "${workspaceFolder}\\src\\*.cpp",
         "${workspaceFolder}\\src\\graphics\\*.cpp",
+        "${workspaceFolder}\\src\\entities\\*.cpp",
         "-lglfw3dll",
         "-o",
         "${workspaceFolder}\\bin\\myprogram.exe"

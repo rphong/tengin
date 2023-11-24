@@ -11,9 +11,12 @@
 #include <iostream>
 #include <array>
 #include "graphics/shader.hpp"
+#include "entities/tank.hpp"
 
 const unsigned int WIDTH = 1200;
 const unsigned int HEIGHT = 900;
+
+void processInput(GLFWwindow* window, Tank& player1, const float& delta);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, height, width);
@@ -47,10 +50,10 @@ int main() {
         0.8f, 0.8f, 0.0f, 1.0f, 1.0f,
         0.8f, -0.8f, 0.0f, 1.0f, 0.0f};
     const float tankVert[] = {
-        -0.2f, -0.2f, 0.0f, 0.0f, 0.0f,
-        -0.2f, -0.1f, 0.0f, 0.0f, 1.0f,
-        -0.1f, -0.1f, 0.0f, 1.0f, 1.0f,
-        -0.1f, -0.2f, 0.0f, 1.0f, 0.0f};
+        -0.1f, -0.1f, 0.0f, 0.0f, 0.0f,
+        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f,
+        0.1f, 0.1f, 0.0f, 1.0f, 1.0f,
+        0.1f, -0.1f, 0.0f, 1.0f, 0.0f};
     unsigned int indicies[] = {
         0, 1, 2,
         2, 0, 3};
@@ -134,19 +137,26 @@ int main() {
 
     shader.use();
 
+    // Camera
     const glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
     shader.setMat4("projection", projection);
-    
+
     const glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-                       glm::vec3(0.0f, 0.0f, 0.0f),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
+                                       glm::vec3(0.0f, 0.0f, 0.0f),
+                                       glm::vec3(0.0f, 1.0f, 0.0f));
     shader.setMat4("view", view);
 
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f));
-    shader.setMat4("model", model);
+    Tank player1 = Tank(glm::vec2(0.0f, 0.0f), 0.0f);
+    float deltaTime = 0.0f, lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
+        float currentFrame = static_cast<float>(glfwGetTime());
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        // Input
+        processInput(window, player1, deltaTime);
+
         // Rendering commands
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -162,14 +172,22 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, textures[0]);
 
         glBindVertexArray(VAOs[0]);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f));
+        shader.setMat4("model", model);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        // Draw tanks
+        // Draw tank
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures[1]);
         shader.setInt("texture1", 0);
 
         glBindVertexArray(VAOs[1]);
+        model = glm::mat4(1.0f);
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        model = glm::translate(model, glm::vec3(player1.getPosition(), 0.0f));
+        model = glm::rotate(model, glm::radians(player1.getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
+        shader.setMat4("model", model);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // Check and call events & swap buffers
@@ -182,4 +200,19 @@ int main() {
     glfwTerminate();
 
     return 0;
+}
+
+void processInput(GLFWwindow* window, Tank& player1, const float& delta) {
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+
+    // Movement
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        player1.move(player1.getSpeed() * delta);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        player1.move(-player1.getSpeed() * delta);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        player1.rotate(0.05f);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        player1.rotate(-0.05f);
 }
