@@ -10,8 +10,6 @@
 
 class Shader {
    public:
-    unsigned int m_ID;
-
     Shader(const std::string& vertexPath, const std::string fragmentPath);
     ~Shader();
     void use();
@@ -21,5 +19,6 @@ class Shader {
     void setMat4(const std::string& name, const glm::mat4& model) const;
 
    private:
+    unsigned int m_ID;
     void printError(const std::string& stage, const GLenum& pname, const unsigned int& shader = 0) const;
 };
