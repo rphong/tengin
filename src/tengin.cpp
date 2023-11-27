@@ -13,8 +13,8 @@
 #include "graphics/shader.hpp"
 #include "entities/tank.hpp"
 
-const unsigned int WIDTH = 1200;
-const unsigned int HEIGHT = 900;
+constexpr unsigned int WIDTH = 1200;
+constexpr unsigned int HEIGHT = 900;
 
 void processInput(GLFWwindow* window, Tank& player1, const float& delta);
 
