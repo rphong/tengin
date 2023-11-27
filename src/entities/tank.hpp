@@ -2,11 +2,6 @@
 
 #include <glm/glm.hpp>
 
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
 class Tank {
    public:
     constexpr Tank(const glm::vec2& pos, const float& angle = 0.0f, const float& speed = 0.1f) 
