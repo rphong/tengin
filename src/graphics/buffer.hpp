@@ -24,7 +24,7 @@ class VBO {
 
 class EBO {
    public:
-    EBO(const std::vector<GLuint>& indicies);
+    EBO(const std::vector<GLuint>& indices);
     ~EBO();
     EBO(const EBO&) = delete;
     EBO& operator=(const EBO&) = delete;

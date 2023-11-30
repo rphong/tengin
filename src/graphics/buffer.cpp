@@ -34,10 +34,10 @@ void VBO::release() {
     m_id = 0;
 }
 
-EBO::EBO(const std::vector<GLuint>& indicies) {
+EBO::EBO(const std::vector<GLuint>& indices) {
     glGenBuffers(1, &m_id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(GLuint), &indicies[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 }
 
 EBO::~EBO() {
