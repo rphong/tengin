@@ -59,13 +59,9 @@ Shader::Shader(const std::string& vertexPath, const std::string fragmentPath) {
     glDeleteShader(fragment);
 };
 
-Shader::~Shader() {
-    glDeleteProgram(m_ID);
-}
+Shader::~Shader() { glDeleteProgram(m_ID); }
 
-void Shader::use() {
-    glUseProgram(m_ID);
-}
+void Shader::use() { glUseProgram(m_ID); }
 
 void Shader::setBool(const std::string& name, const bool& value) const {
     glUniform1i(glGetUniformLocation(m_ID, name.c_str()), (int)value);
@@ -80,17 +76,20 @@ void Shader::setFloat(const std::string& name, const float& value) const {
 }
 
 void Shader::setMat4(const std::string& name, const glm::mat4& model) const {
-    glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE,
+                       &model[0][0]);
 }
 
-void Shader::printError(const std::string& stage, const GLenum& pname, const unsigned int& shader) const {
+void Shader::printError(const std::string& stage, const GLenum& pname,
+                        const unsigned int& shader) const {
     char infoLog[512];
     std::string errorMessage = "ERROR::SHADER::" + stage + "::";
 
-    if(pname == GL_COMPILE_STATUS) {
+    if (pname == GL_COMPILE_STATUS) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        std::cout << errorMessage + "COMPILATION_FAILED\n" << infoLog << std::endl;
-    } else if(pname == GL_LINK_STATUS) {
+        std::cout << errorMessage + "COMPILATION_FAILED\n"
+                  << infoLog << std::endl;
+    } else if (pname == GL_LINK_STATUS) {
         glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
         std::cout << errorMessage + "LINKING_FAILED\n" << infoLog << std::endl;
     }

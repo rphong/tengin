@@ -20,5 +20,6 @@ class Shader {
 
    private:
     unsigned int m_ID;
-    void printError(const std::string& stage, const GLenum& pname, const unsigned int& shader = 0) const;
+    void printError(const std::string& stage, const GLenum& pname,
+                    const unsigned int& shader = 0) const;
 };

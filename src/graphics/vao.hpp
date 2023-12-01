@@ -17,8 +17,12 @@ class VAO {
     VAO(VAO&& other);
     VAO& operator=(VAO&& other);
 
-    [[nodiscard]] constexpr size_t getVerticesCount() const { return m_numVertices; }
-    [[nodiscard]] constexpr size_t getIndicesCount() const { return m_numIndices; }
+    [[nodiscard]] constexpr size_t getVerticesCount() const {
+        return m_numVertices;
+    }
+    [[nodiscard]] constexpr size_t getIndicesCount() const {
+        return m_numIndices;
+    }
     void setVertexBuffer() const;
     void setElementBuffer() const;
     void bind() const;

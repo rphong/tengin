@@ -8,7 +8,8 @@
 
 class Tank {
    public:
-    Tank(VAO&& vao, const glm::vec2& pos, const float& angle = 0.0f, const float& speed = 0.2f);
+    Tank(VAO&& vao, const glm::vec2& pos, const float& angle = 0.0f,
+         const float& speed = 0.2f);
     void draw(const Shader& shader) const;
     void constexpr move(const float& dist) {
         m_pos.x = m_pos.x + cos(glm::radians(m_tankAngle)) * dist;

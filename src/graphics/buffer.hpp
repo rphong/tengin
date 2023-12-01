@@ -6,7 +6,8 @@
 
 class VBO {
    public:
-    VBO(const std::vector<float>& vertices, const std::vector<int>& attributeLengths);
+    VBO(const std::vector<float>& vertices,
+        const std::vector<int>& attributeLengths);
     ~VBO();
     VBO(const VBO&) = delete;
     VBO& operator=(const VBO&) = delete;
@@ -14,8 +15,12 @@ class VBO {
     VBO& operator=(VBO&& other);
 
     void bind() const;
-    [[nodiscard]] constexpr size_t getNumVertices() const { return m_numVertices; }
-    [[nodiscard]] constexpr std::vector<int> getAttribVec() const { return m_attribLengths; }
+    [[nodiscard]] constexpr size_t getNumVertices() const {
+        return m_numVertices;
+    }
+    [[nodiscard]] constexpr std::vector<int> getAttribVec() const {
+        return m_attribLengths;
+    }
 
    private:
     size_t m_numVertices;
@@ -34,7 +39,9 @@ class EBO {
     EBO& operator=(EBO&& other);
 
     void bind() const;
-    [[nodiscard]] constexpr size_t getNumIndices() const { return m_numIndices; }
+    [[nodiscard]] constexpr size_t getNumIndices() const {
+        return m_numIndices;
+    }
 
    private:
     size_t m_numIndices;

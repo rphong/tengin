@@ -63,8 +63,7 @@ int main() {
         0, 1, 2,
         2, 0, 3};
 
-    VAO vaoFloor(VBO(bgVert, bgAttribLen),
-                 EBO(indices));
+    VAO vaoFloor(VBO(bgVert, bgAttribLen), EBO(indices));
 
     std::array<GLuint, 2> textures;
     glGenTextures(textures.size(), &textures[0]);
@@ -78,7 +77,8 @@ int main() {
 
     // Load & generate textures
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("./textures/sand_floor.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data =
+        stbi_load("./textures/sand_floor.jpg", &width, &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
                      GL_UNSIGNED_BYTE, data);
@@ -96,7 +96,8 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    data = stbi_load("./textures/green_tank.png", &width, &height, &nrChannels, STBI_rgb_alpha);
+    data = stbi_load("./textures/green_tank.png", &width, &height, &nrChannels,
+                     STBI_rgb_alpha);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, data);
@@ -110,16 +111,16 @@ int main() {
     shader.use();
 
     // Camera
-    const glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
+    const glm::mat4 projection =
+        glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
     shader.setMat4("projection", projection);
 
-    const glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-                                       glm::vec3(0.0f, 0.0f, 0.0f),
-                                       glm::vec3(0.0f, 1.0f, 0.0f));
+    const glm::mat4 view =
+        glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+                    glm::vec3(0.0f, 1.0f, 0.0f));
     shader.setMat4("view", view);
 
-    Tank player1(VAO(VBO(tankVert, bgAttribLen),
-                     EBO(indices)),
+    Tank player1(VAO(VBO(tankVert, bgAttribLen), EBO(indices)),
                  glm::vec2(0.0f, 0.0f));
     float deltaTime = 0.0f, lastFrame = 0.0f;
 
@@ -175,8 +176,8 @@ void processInput(GLFWwindow* window, Tank& player1, const float& delta) {
         player1.move(player1.getSpeed() * delta);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         player1.move(-player1.getSpeed() * delta);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
         player1.rotate(0.05f);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
         player1.rotate(-0.05f);
 }
