@@ -5,7 +5,6 @@
 
 #include <numeric>
 #include <optional>
-#include <iostream>
 
 class VAO {
    public:

@@ -18,7 +18,6 @@ void Tank::draw(const Shader& shader) const {
                         glm::vec3(0.0f, 0.0f, 1.0f));
     shader.setMat4("model", model);
 
-    // If available, use element indices to draw
     if (m_vao.getIndicesCount() != 0) {
         glDrawElements(GL_TRIANGLES, m_vao.getIndicesCount(), GL_UNSIGNED_INT,
                        0);
