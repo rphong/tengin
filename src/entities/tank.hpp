@@ -1,11 +1,15 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "../graphics/vao.hpp"
+#include "../graphics/shader.hpp"
 
 class Tank {
    public:
-    constexpr Tank(const glm::vec2& pos, const float& angle = 0.0f, const float& speed = 0.1f) 
-        : m_pos(pos), m_tankAngle(angle), m_barrelAngle(angle), m_speed(speed) {}
+    Tank(VAO&& vao, const glm::vec2& pos, const float& angle = 0.0f, const float& speed = 0.2f);
+    void draw(const Shader& shader) const;
     void constexpr move(const float& dist) {
         m_pos.x = m_pos.x + cos(glm::radians(m_tankAngle)) * dist;
         m_pos.y = m_pos.y + sin(glm::radians(m_tankAngle)) * dist;
@@ -24,6 +28,7 @@ class Tank {
     [[nodiscard]] constexpr float getSpeed() const { return m_speed; }
 
    private:
+    VAO m_vao;
     glm::vec2 m_pos;
     float m_tankAngle;
     float m_barrelAngle;

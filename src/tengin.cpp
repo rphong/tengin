@@ -10,7 +10,11 @@
 
 #include <iostream>
 #include <array>
+#include <vector>
+#include <utility>
 #include "graphics/shader.hpp"
+#include "graphics/vao.hpp"
+#include "graphics/buffer.hpp"
 #include "entities/tank.hpp"
 
 constexpr unsigned int WIDTH = 1200;
@@ -44,55 +48,23 @@ int main() {
 
     Shader shader("./shaders/vertex.glsl", "./shaders/fragment.glsl");
 
-    const float bgVert[] = {
+    const std::vector<float> bgVert{
         -0.8f, -0.8f, 0.0f, 0.0f, 0.0f,
         -0.8f, 0.8f, 0.0f, 0.0f, 1.0f,
         0.8f, 0.8f, 0.0f, 1.0f, 1.0f,
         0.8f, -0.8f, 0.0f, 1.0f, 0.0f};
-    const float tankVert[] = {
+    const std::vector<int> bgAttribLen{3, 2};
+    const std::vector<float> tankVert{
         -0.1f, -0.1f, 0.0f, 0.0f, 0.0f,
         -0.1f, 0.1f, 0.0f, 0.0f, 1.0f,
         0.1f, 0.1f, 0.0f, 1.0f, 1.0f,
         0.1f, -0.1f, 0.0f, 1.0f, 0.0f};
-    unsigned int indicies[] = {
+    const std::vector<GLuint> indices{
         0, 1, 2,
         2, 0, 3};
 
-    unsigned int EBO;
-    // To draw multiple objects, bind corresponding VAO, then draw
-    std::array<GLuint, 2> VAOs;
-    std::array<GLuint, 2> VBOs;
-    glGenVertexArrays(VAOs.size(), &VAOs[0]);
-    glGenBuffers(VBOs.size(), &VBOs[0]);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAOs[0]);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(bgVert), bgVert, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(VAOs[1]);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(tankVert), tankVert, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    VAO vaoFloor(VBO(bgVert, bgAttribLen),
+                 EBO(indices));
 
     std::array<GLuint, 2> textures;
     glGenTextures(textures.size(), &textures[0]);
@@ -146,7 +118,9 @@ int main() {
                                        glm::vec3(0.0f, 1.0f, 0.0f));
     shader.setMat4("view", view);
 
-    Tank player1 = Tank(glm::vec2(0.0f, 0.0f), 0.0f);
+    Tank player1(VAO(VBO(tankVert, bgAttribLen),
+                     EBO(indices)),
+                 glm::vec2(0.0f, 0.0f));
     float deltaTime = 0.0f, lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
@@ -171,7 +145,7 @@ int main() {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures[0]);
 
-        glBindVertexArray(VAOs[0]);
+        vaoFloor.bind();
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f));
         shader.setMat4("model", model);
@@ -180,23 +154,13 @@ int main() {
         // Draw tank
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textures[1]);
-        shader.setInt("texture1", 0);
 
-        glBindVertexArray(VAOs[1]);
-        model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-        model = glm::translate(model, glm::vec3(player1.getPosition(), 0.0f));
-        model = glm::rotate(model, glm::radians(player1.getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
-        shader.setMat4("model", model);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        player1.draw(shader);
 
         // Check and call events & swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glDeleteVertexArrays(VAOs.size(), &VAOs[0]);
-    glDeleteBuffers(VBOs.size(), &VBOs[0]);
-    glDeleteBuffers(1, &EBO);
     glfwTerminate();
 
     return 0;
