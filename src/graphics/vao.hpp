@@ -1,10 +1,9 @@
 #pragma once
 
 #include <glad/glad.h>
-#include "buffer.hpp"
 
-#include <numeric>
 #include <optional>
+#include "buffer.hpp"
 
 class VAO {
    public:

@@ -1,5 +1,9 @@
 #include "shader.hpp"
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
 Shader::Shader(const std::string& vertexPath, const std::string fragmentPath) {
     // Get vertex/fragment source code from files
     std::string vertexCode, fragmentCode;

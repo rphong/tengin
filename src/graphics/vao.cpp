@@ -1,8 +1,11 @@
 #include "vao.hpp"
 
+#include <numeric>
+#include <vector>
+
 VAO::VAO(VBO&& vbo) : m_vbo(std::move(vbo)), m_numIndices(0) {
     calcVerticesCount();
-    
+
     glGenVertexArrays(1, &m_id);
     setVertexBuffer();
 }
