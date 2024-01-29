@@ -2,11 +2,14 @@
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-#include <stb_image.h>
+#include <stb/stb_image.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include <iostream>
 #include <array>
@@ -46,7 +49,8 @@ int main() {
         return -1;
     }
 
-    Shader shader("../../tengin/src/shaders/vertex.glsl", "../../tengin/src/shaders/fragment.glsl");
+
+    Shader shader("../tengin/src/shaders/vertex.glsl", "../tengin/src/shaders/fragment.glsl");
 
     const std::vector<float> bgVert{
         -0.8f, -0.8f, 0.0f, 0.0f, 0.0f,
@@ -78,7 +82,7 @@ int main() {
     // Load & generate textures
     int width, height, nrChannels;
     unsigned char* data =
-        stbi_load("../../tengin/src/textures/sand_floor.jpg", &width, &height, &nrChannels, 0);
+        stbi_load("../tengin/src/textures/sand_floor.jpg", &width, &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
                      GL_UNSIGNED_BYTE, data);
@@ -96,7 +100,7 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    data = stbi_load("../../tengin/src/textures/green_tank.png", &width, &height, &nrChannels,
+    data = stbi_load("../tengin/src/textures/green_tank.png", &width, &height, &nrChannels,
                      STBI_rgb_alpha);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
