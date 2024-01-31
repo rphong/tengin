@@ -46,26 +46,30 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
     }
 
+    FT_Library ft;
+    if (FT_Init_FreeType(&ft)) {
+        std::cout << "ERROR::FREETYPE: Could not init FreeType Library"
+                  << std::endl;
+    }
 
-    Shader shader("../tengin/src/shaders/vertex.glsl", "../tengin/src/shaders/fragment.glsl");
+    FT_Face face;
+    if (FT_New_Face(ft, "../tengin/src/resources/fonts/Roboto-Medium.ttf", 0, &face)) {
+        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+    }
+
+    Shader shader("../tengin/src/shaders/entity.vertex.glsl",
+                  "../tengin/src/shaders/entity.frag.glsl");
 
     const std::vector<float> bgVert{
-        -0.8f, -0.8f, 0.0f, 0.0f, 0.0f,
-        -0.8f, 0.8f, 0.0f, 0.0f, 1.0f,
-        0.8f, 0.8f, 0.0f, 1.0f, 1.0f,
-        0.8f, -0.8f, 0.0f, 1.0f, 0.0f};
+        -0.8f, -0.8f, 0.0f, 0.0f, 0.0f, -0.8f, 0.8f,  0.0f, 0.0f, 1.0f,
+        0.8f,  0.8f,  0.0f, 1.0f, 1.0f, 0.8f,  -0.8f, 0.0f, 1.0f, 0.0f};
     const std::vector<int> bgAttribLen{3, 2};
     const std::vector<float> tankVert{
-        -0.1f, -0.1f, 0.0f, 0.0f, 0.0f,
-        -0.1f, 0.1f, 0.0f, 0.0f, 1.0f,
-        0.1f, 0.1f, 0.0f, 1.0f, 1.0f,
-        0.1f, -0.1f, 0.0f, 1.0f, 0.0f};
-    const std::vector<GLuint> indices{
-        0, 1, 2,
-        2, 0, 3};
+        -0.1f, -0.1f, 0.0f, 0.0f, 0.0f, -0.1f, 0.1f,  0.0f, 0.0f, 1.0f,
+        0.1f,  0.1f,  0.0f, 1.0f, 1.0f, 0.1f,  -0.1f, 0.0f, 1.0f, 0.0f};
+    const std::vector<GLuint> indices{0, 1, 2, 2, 0, 3};
 
     VAO vaoFloor(VBO(bgVert, bgAttribLen), EBO(indices));
 
@@ -81,8 +85,8 @@ int main() {
 
     // Load & generate textures
     int width, height, nrChannels;
-    unsigned char* data =
-        stbi_load("../tengin/src/textures/sand_floor.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("../tengin/src/resources/textures/sand_floor.jpg",
+                                    &width, &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
                      GL_UNSIGNED_BYTE, data);
@@ -100,8 +104,8 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    data = stbi_load("../tengin/src/textures/green_tank.png", &width, &height, &nrChannels,
-                     STBI_rgb_alpha);
+    data = stbi_load("../tengin/src/resources/textures/green_tank.png", &width, &height,
+                     &nrChannels, STBI_rgb_alpha);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, data);
@@ -180,8 +184,6 @@ void processInput(GLFWwindow* window, Tank& player1, const float& delta) {
         player1.move(player1.getSpeed() * delta);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         player1.move(-player1.getSpeed() * delta);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
-        player1.rotate(0.05f);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
-        player1.rotate(-0.05f);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) player1.rotate(0.05f);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) player1.rotate(-0.05f);
 }
