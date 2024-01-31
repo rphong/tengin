@@ -4,6 +4,7 @@
 
 #include <vector>
 
+namespace Graphics {
 class VBO {
    public:
     VBO(const std::vector<float>& vertices,
@@ -48,3 +49,4 @@ class EBO {
     GLuint m_id;
     void release();
 };
+}  // namespace Graphics

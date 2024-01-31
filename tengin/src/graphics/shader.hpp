@@ -5,6 +5,7 @@
 
 #include <string>
 
+namespace Graphics {
 class Shader {
    public:
     Shader(const std::string& vertexPath, const std::string fragmentPath);
@@ -20,3 +21,4 @@ class Shader {
     void printError(const std::string& stage, const GLenum& pname,
                     const unsigned int& shader = 0) const;
 };
+}  // namespace Graphics

@@ -5,6 +5,7 @@
 #include <optional>
 #include "buffer.hpp"
 
+namespace Graphics {
 class VAO {
    public:
     VAO(VBO&& vbo);
@@ -34,3 +35,4 @@ class VAO {
     VBO m_vbo;
     std::optional<EBO> m_ebo;
 };
+}  // namespace Graphics

@@ -1,6 +1,6 @@
 #include "tank.hpp"
 
-Tank::Tank(VAO&& vao, const glm::vec2& pos, const float& angle,
+Tank::Tank(Graphics::VAO&& vao, const glm::vec2& pos, const float& angle,
            const float& speed)
     : m_vao(std::move(vao)),
       m_pos(pos),
@@ -8,7 +8,7 @@ Tank::Tank(VAO&& vao, const glm::vec2& pos, const float& angle,
       m_barrelAngle(angle),
       m_speed(speed) {}
 
-void Tank::draw(const Shader& shader) const {
+void Tank::draw(const Graphics::Shader& shader) const {
     m_vao.bind();
     
     glm::mat4 model = glm::mat4(1.0f);

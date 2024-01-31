@@ -3,6 +3,9 @@
 #include <numeric>
 #include <vector>
 
+using Graphics::VAO;
+using Graphics::VBO;
+
 VAO::VAO(VBO&& vbo) : m_vbo(std::move(vbo)), m_numIndices(0) {
     calcVerticesCount();
 

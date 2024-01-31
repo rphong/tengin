@@ -1,5 +1,8 @@
 #include "buffer.hpp"
 
+using Graphics::VBO;
+using Graphics::EBO;
+
 VBO::VBO(const std::vector<float>& vertices,
          const std::vector<int>& attributeLengths)
     : m_numVertices(vertices.size()), m_attribLengths(attributeLengths) {

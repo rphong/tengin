@@ -15,9 +15,6 @@
 #include <array>
 #include <vector>
 #include <utility>
-#include "graphics/shader.hpp"
-#include "graphics/vao.hpp"
-#include "graphics/buffer.hpp"
 #include "entities/tank.hpp"
 
 constexpr unsigned int WIDTH = 1200;
@@ -59,7 +56,7 @@ int main() {
         std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
     }
 
-    Shader shader("../tengin/src/shaders/entity.vertex.glsl",
+    Graphics::Shader shader("../tengin/src/shaders/entity.vertex.glsl",
                   "../tengin/src/shaders/entity.frag.glsl");
 
     const std::vector<float> bgVert{
@@ -71,7 +68,7 @@ int main() {
         0.1f,  0.1f,  0.0f, 1.0f, 1.0f, 0.1f,  -0.1f, 0.0f, 1.0f, 0.0f};
     const std::vector<GLuint> indices{0, 1, 2, 2, 0, 3};
 
-    VAO vaoFloor(VBO(bgVert, bgAttribLen), EBO(indices));
+    Graphics::VAO vaoFloor(Graphics::VBO(bgVert, bgAttribLen), Graphics::EBO(indices));
 
     std::array<GLuint, 2> textures;
     glGenTextures(textures.size(), &textures[0]);
@@ -128,7 +125,7 @@ int main() {
                     glm::vec3(0.0f, 1.0f, 0.0f));
     shader.setMat4("view", view);
 
-    Tank player1(VAO(VBO(tankVert, bgAttribLen), EBO(indices)),
+    Tank player1(Graphics::VAO(Graphics::VBO(tankVert, bgAttribLen), Graphics::EBO(indices)),
                  glm::vec2(0.0f, 0.0f));
     float deltaTime = 0.0f, lastFrame = 0.0f;
 

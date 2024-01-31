@@ -4,6 +4,8 @@
 #include <sstream>
 #include <iostream>
 
+using Graphics::Shader;
+
 Shader::Shader(const std::string& vertexPath, const std::string fragmentPath) {
     // Get vertex/fragment source code from files
     std::string vertexCode, fragmentCode;
