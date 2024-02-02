@@ -24,7 +24,7 @@ VAO::VAO(VBO&& vbo, EBO&& ebo)
     setElementBuffer();
 }
 
-VAO::~VAO() { glDeleteVertexArrays(1, &m_id); }
+VAO::~VAO() { release(); }
 
 VAO::VAO(VAO&& other)
     : m_id(other.m_id),
