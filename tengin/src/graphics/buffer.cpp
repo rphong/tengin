@@ -1,15 +1,22 @@
 #include "buffer.hpp"
 
-using Graphics::VBO;
 using Graphics::EBO;
+using Graphics::VBO;
 
 VBO::VBO(const std::vector<float>& vertices,
-         const std::vector<int>& attributeLengths)
+         const std::vector<int>& attributeLengths, const int& drawType)
     : m_numVertices(vertices.size()), m_attribLengths(attributeLengths) {
     glGenBuffers(1, &m_id);
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0],
-                 GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, m_numVertices * sizeof(float), &vertices[0],
+                 drawType);
+}
+
+VBO::VBO(const int& size, const std::vector<int>& attributeLengths, const int& drawType)
+    : m_attribLengths(attributeLengths) {
+    glGenBuffers(1, &m_id);
+    glBindBuffer(GL_ARRAY_BUFFER, m_id);
+    glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), NULL, drawType);
 }
 
 VBO::~VBO() { release(); }

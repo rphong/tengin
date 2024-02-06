@@ -8,7 +8,9 @@ namespace Graphics {
 class VBO {
    public:
     VBO(const std::vector<float>& vertices,
-        const std::vector<int>& attributeLengths);
+        const std::vector<int>& attributeLengths, const int& drawType);
+    VBO(const int& size, const std::vector<int>& attributeLenghts,
+        const int& drawType);
     ~VBO();
     VBO(const VBO&) = delete;
     VBO& operator=(const VBO&) = delete;

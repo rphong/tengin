@@ -8,17 +8,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include <iostream>
 #include <array>
 #include <vector>
 #include <utility>
 #include "entities/tank.hpp"
+#include "graphics/textRenderer.hpp"
 
-constexpr unsigned int WIDTH = 1200;
-constexpr unsigned int HEIGHT = 900;
+const glm::vec2 screenSize(1200, 800);
 
 void processInput(GLFWwindow* window, Tank& player1, const float& delta);
 
@@ -33,7 +30,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window =
-        glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", NULL, NULL);
+        glfwCreateWindow(screenSize.x, screenSize.y, "LearnOpenGL", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -45,19 +42,10 @@ int main() {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
-    FT_Library ft;
-    if (FT_Init_FreeType(&ft)) {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library"
-                  << std::endl;
-    }
-
-    FT_Face face;
-    if (FT_New_Face(ft, "../tengin/src/resources/fonts/Roboto-Medium.ttf", 0, &face)) {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-    }
-
     Graphics::Shader shader("../tengin/src/shaders/entity.vertex.glsl",
-                  "../tengin/src/shaders/entity.frag.glsl");
+                            "../tengin/src/shaders/entity.frag.glsl");
+
+    Graphics::TextRenderer text(screenSize);
 
     const std::vector<float> bgVert{
         -0.8f, -0.8f, 0.0f, 0.0f, 0.0f, -0.8f, 0.8f,  0.0f, 0.0f, 1.0f,
@@ -68,7 +56,8 @@ int main() {
         0.1f,  0.1f,  0.0f, 1.0f, 1.0f, 0.1f,  -0.1f, 0.0f, 1.0f, 0.0f};
     const std::vector<GLuint> indices{0, 1, 2, 2, 0, 3};
 
-    Graphics::VAO vaoFloor(Graphics::VBO(bgVert, bgAttribLen), Graphics::EBO(indices));
+    Graphics::VAO vaoFloor(Graphics::VBO(bgVert, bgAttribLen, GL_STATIC_DRAW),
+                           Graphics::EBO(indices));
 
     std::array<GLuint, 2> textures;
     glGenTextures(textures.size(), &textures[0]);
@@ -82,8 +71,9 @@ int main() {
 
     // Load & generate textures
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("../tengin/src/resources/textures/sand_floor.jpg",
-                                    &width, &height, &nrChannels, 0);
+    unsigned char* data =
+        stbi_load("../tengin/src/resources/textures/sand_floor.jpg", &width,
+                  &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
                      GL_UNSIGNED_BYTE, data);
@@ -101,8 +91,8 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    data = stbi_load("../tengin/src/resources/textures/green_tank.png", &width, &height,
-                     &nrChannels, STBI_rgb_alpha);
+    data = stbi_load("../tengin/src/resources/textures/green_tank.png", &width,
+                     &height, &nrChannels, STBI_rgb_alpha);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, data);
@@ -118,15 +108,18 @@ int main() {
     // Camera
     const glm::mat4 projection =
         glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.1f, 100.0f);
-    shader.setMat4("projection", projection);
 
     const glm::mat4 view =
         glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f),
                     glm::vec3(0.0f, 1.0f, 0.0f));
+
+    shader.setMat4("projection", projection);
     shader.setMat4("view", view);
 
-    Tank player1(Graphics::VAO(Graphics::VBO(tankVert, bgAttribLen), Graphics::EBO(indices)),
-                 glm::vec2(0.0f, 0.0f));
+    Tank player1(
+        Graphics::VAO(Graphics::VBO(tankVert, bgAttribLen, GL_STATIC_DRAW),
+                      Graphics::EBO(indices)),
+        glm::vec2(0.0f, 0.0f));
     float deltaTime = 0.0f, lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
@@ -162,6 +155,8 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, textures[1]);
 
         player1.draw(shader);
+        text.RenderText("This is sample text", 25.0f, 25.0f, 1.0f,
+                        glm::vec3(0.5, 0.8f, 0.2f));
 
         // Check and call events & swap buffers
         glfwSwapBuffers(window);

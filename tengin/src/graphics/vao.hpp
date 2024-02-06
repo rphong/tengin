@@ -23,6 +23,7 @@ class VAO {
         return m_numIndices;
     }
     void setVertexBuffer() const;
+    void setVertexSubBuffer(const std::vector<float>& vertices) const;
     void setElementBuffer() const;
     void bind() const;
 

@@ -65,6 +65,11 @@ void VAO::setVertexBuffer() const {
     }
 }
 
+void VAO::setVertexSubBuffer(const std::vector<float>& vertices) const {
+    m_vbo.bind();
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), &vertices[0]);
+}
+
 void VAO::setElementBuffer() const {
     bind();
     m_ebo->bind();
