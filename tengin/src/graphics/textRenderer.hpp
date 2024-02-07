@@ -31,13 +31,11 @@ class TextRenderer {
    private:
     constexpr static unsigned int FONTSIZE = 48;
 
-    bool validInitialLoad();
+    bool validInitialLoad(FT_Library& ft, FT_Face& face);
     void loadCharacters();
     void setTextureOptions() const;
     const glm::vec2 m_screenSize;
     Graphics::Shader m_shader;
-    FT_Library m_ft;
-    FT_Face m_face;
     VAO m_VAO;
     std::map<GLchar, Character> m_characters;
 };
