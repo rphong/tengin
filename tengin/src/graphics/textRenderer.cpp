@@ -52,17 +52,14 @@ void TextRenderer::loadCharacters() {
 
 void TextRenderer::RenderText(const std::string& text, float x, const float& y,
                               const float& scale, const glm::vec3& color) {
-    // activate corresponding render state
     m_shader.use();
     m_shader.setFloat3("textColor", color);
-    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);   
     glActiveTexture(GL_TEXTURE0);
     m_VAO.bind();
 
-    // iterate through all characters
-    std::string::const_iterator c;
-    for (c = text.begin(); c != text.end(); c++) {
-        Character ch = m_characters[*c];
+    for (const auto& c : text) {
+        const Character ch = m_characters[c];
 
         const float xpos = x + ch.bearing.x * scale;
         const float ypos = y - (ch.size.y - ch.bearing.y) * scale;
@@ -70,23 +67,21 @@ void TextRenderer::RenderText(const std::string& text, float x, const float& y,
         const float w = ch.size.x * scale;
         const float h = ch.size.y * scale;
         const std::vector<float> vertices{
-            xpos,     ypos + h, 0.0f, 0.0f, xpos,     ypos,     0.0f, 1.0f,
-            xpos + w, ypos,     1.0f, 1.0f, xpos,     ypos + h, 0.0f, 0.0f,
-            xpos + w, ypos,     1.0f, 1.0f, xpos + w, ypos + h, 1.0f, 0.0f};
-        // render glyph texture over quad
+            xpos,     ypos + h, 0.0f, 0.0f, 
+            xpos,     ypos,     0.0f, 1.0f,
+            xpos + w, ypos,     1.0f, 1.0f, 
+            xpos,     ypos + h, 0.0f, 0.0f,
+            xpos + w, ypos,     1.0f, 1.0f, 
+            xpos + w, ypos + h, 1.0f, 0.0f};
+        // Render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, ch.textureID);
-        // update content of VBO memory
         m_VAO.setVertexSubBuffer(vertices);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        // render quad
+        // Render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        // now advance cursors for next glyph (note that advance is number
-        // of 1/64 pixels)
-        x += (ch.advance >> 6) *
-             scale;  // bitshift by 6 to get value in pixels (2^6 = 64
-                     // (divide amount of 1/64th pixels by 64 to get amount
-                     // of pixels))
+        // Advance cursor(1/64th pixels)
+        x += (ch.advance >> 6) * scale;
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
