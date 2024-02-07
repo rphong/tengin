@@ -3,7 +3,6 @@
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
 #include <stb/stb_image.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -12,6 +11,8 @@
 #include <array>
 #include <vector>
 #include <utility>
+#include <cassert>
+
 #include "entities/tank.hpp"
 #include "graphics/textRenderer.hpp"
 
@@ -24,23 +25,18 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 int main() {
-    glfwInit();
+    assert(glfwInit());
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window =
         glfwCreateWindow(screenSize.x, screenSize.y, "LearnOpenGL", NULL, NULL);
-    if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+    assert(window);
+
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-    }
+    assert(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress));
 
     Graphics::Shader shader("../tengin/src/shaders/entity.vertex.glsl",
                             "../tengin/src/shaders/entity.frag.glsl");

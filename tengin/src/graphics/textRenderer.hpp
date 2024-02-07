@@ -8,6 +8,7 @@
 
 #include <map>
 #include <string>
+#include <cassert>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -31,7 +32,6 @@ class TextRenderer {
    private:
     constexpr static unsigned int FONTSIZE = 48;
 
-    bool validInitialLoad(FT_Library& ft, FT_Face& face);
     void loadCharacters();
     void setTextureOptions() const;
     const glm::vec2 m_screenSize;
