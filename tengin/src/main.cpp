@@ -52,7 +52,8 @@ int main() {
     Graphics::VAO vaoFloor(Graphics::VBO(bgVert, bgAttribLen, GL_STATIC_DRAW),
                            Graphics::EBO(indices));
 
-    Graphics::Texture texFloor("../tengin/src/resources/textures/sand_floor.jpg", GL_RGB);
+    Graphics::Texture texFloor(
+        "../tengin/src/resources/textures/sand_floor.jpg", GL_RGB);
 
     shader.setInt("texture1", 0);
     shader.use();
@@ -70,11 +71,16 @@ int main() {
 
     Tank player1(glm::vec2(0.0f, 0.0f));
     float deltaTime = 0.0f, lastFrame = 0.0f;
+    float FPSDisplayRate = 0.0f;
+    float totalFrames = 0.0f;
+    float FPS = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
+        ++totalFrames;
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        FPSDisplayRate += deltaTime;
 
         // Input
         processInput(window, player1, deltaTime);
@@ -101,10 +107,13 @@ int main() {
         // Draw tank
         player1.draw(shader);
 
-        // Sample text
-        text.RenderText("This is sample text", 25.0f, 25.0f, 1.0f,
+        // FPS
+        text.RenderText(std::to_string(FPS), 25.0f, 25.0f, 1.0f,
                         glm::vec3(0.5, 0.8f, 0.2f));
-
+        if (FPSDisplayRate >= 0.25) {
+            FPS = totalFrames/currentFrame;
+            FPSDisplayRate = 0;
+        }
         // Check and call events & swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
