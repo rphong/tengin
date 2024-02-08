@@ -10,7 +10,7 @@
 
 class Tank {
    public:
-    Tank(Graphics::VAO&& vao, const glm::vec2& pos, const float& angle = 0.0f,
+    Tank(const glm::vec2& pos, const float& angle = 0.0f,
          const float& speed = 0.2f);
     void draw(const Graphics::Shader& shader) const;
     void constexpr move(const float& dist) {

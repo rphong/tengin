@@ -16,7 +16,7 @@
 #include "graphics/textRenderer.hpp"
 #include "graphics/texture.hpp"
 
-const glm::vec2 screenSize(1200, 800);
+constexpr glm::vec2 screenSize(1200, 800);
 
 void processInput(GLFWwindow* window, Tank& player1, const float& delta);
 
@@ -47,9 +47,6 @@ int main() {
         -0.8f, -0.8f, 0.0f, 0.0f, 0.0f, -0.8f, 0.8f,  0.0f, 0.0f, 1.0f,
         0.8f,  0.8f,  0.0f, 1.0f, 1.0f, 0.8f,  -0.8f, 0.0f, 1.0f, 0.0f};
     const std::vector<int> bgAttribLen{3, 2};
-    const std::vector<float> tankVert{
-        -0.1f, -0.1f, 0.0f, 0.0f, 0.0f, -0.1f, 0.1f,  0.0f, 0.0f, 1.0f,
-        0.1f,  0.1f,  0.0f, 1.0f, 1.0f, 0.1f,  -0.1f, 0.0f, 1.0f, 0.0f};
     const std::vector<GLuint> indices{0, 1, 2, 2, 0, 3};
 
     Graphics::VAO vaoFloor(Graphics::VBO(bgVert, bgAttribLen, GL_STATIC_DRAW),
@@ -71,10 +68,7 @@ int main() {
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
 
-    Tank player1(
-        Graphics::VAO(Graphics::VBO(tankVert, bgAttribLen, GL_STATIC_DRAW),
-                      Graphics::EBO(indices)),
-        glm::vec2(0.0f, 0.0f));
+    Tank player1(glm::vec2(0.0f, 0.0f));
     float deltaTime = 0.0f, lastFrame = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
