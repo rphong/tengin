@@ -1,8 +1,10 @@
 #include "tank.hpp"
 
 const std::vector<float> vert = {
-    -0.1f, -0.1f, 0.0f, 0.0f, 0.0f, -0.1f, 0.1f,  0.0f, 0.0f, 1.0f,
-    0.1f,  0.1f,  0.0f, 1.0f, 1.0f, 0.1f,  -0.1f, 0.0f, 1.0f, 0.0f};
+    -0.1f, -0.1f, 0.0f, 0.0f, 0.0f, 
+    -0.1f,  0.1f, 0.0f, 0.0f, 1.0f,
+     0.1f,  0.1f, 0.0f, 1.0f, 1.0f, 
+     0.1f, -0.1f, 0.0f, 1.0f, 0.0f};
 const std::vector<int> attribLen = {3, 2};
 const std::vector<GLuint> indices = {0, 1, 2, 2, 0, 3};
 
