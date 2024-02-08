@@ -56,10 +56,8 @@ int main() {
                            Graphics::EBO(indices));
 
     Graphics::Texture texFloor("../tengin/src/resources/textures/sand_floor.jpg", GL_RGB);
-    Graphics::Texture texTank("../tengin/src/resources/textures/green_tank.png", GL_RGBA);
 
     shader.setInt("texture1", 0);
-
     shader.use();
 
     // Camera
@@ -107,9 +105,9 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // Draw tank
-        texTank.draw(GL_TEXTURE0);
-
         player1.draw(shader);
+
+        // Sample text
         text.RenderText("This is sample text", 25.0f, 25.0f, 1.0f,
                         glm::vec3(0.5, 0.8f, 0.2f));
 

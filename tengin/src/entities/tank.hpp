@@ -6,6 +6,7 @@
 #include "../graphics/vao.hpp"
 #include "../graphics/buffer.hpp"
 #include "../graphics/shader.hpp"
+#include "../graphics/texture.hpp"
 
 class Tank {
    public:
@@ -31,6 +32,7 @@ class Tank {
 
    private:
     Graphics::VAO m_vao;
+    Graphics::Texture m_texture;
     glm::vec2 m_pos;
     float m_tankAngle;
     float m_barrelAngle;

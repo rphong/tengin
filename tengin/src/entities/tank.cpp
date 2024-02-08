@@ -6,11 +6,13 @@ Tank::Tank(Graphics::VAO&& vao, const glm::vec2& pos, const float& angle,
       m_pos(pos),
       m_tankAngle(angle),
       m_barrelAngle(angle),
-      m_speed(speed) {}
+      m_speed(speed),
+      m_texture("../tengin/src/resources/textures/green_tank.png", GL_RGBA) {}
 
 void Tank::draw(const Graphics::Shader& shader) const {
     m_vao.bind();
-    
+    m_texture.draw(GL_TEXTURE0);
+
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
     model = glm::translate(model, glm::vec3(m_pos, 0.0f));
