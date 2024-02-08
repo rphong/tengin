@@ -2,7 +2,6 @@
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-#include <stb/stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,6 +14,7 @@
 
 #include "entities/tank.hpp"
 #include "graphics/textRenderer.hpp"
+#include "graphics/texture.hpp"
 
 const glm::vec2 screenSize(1200, 800);
 
@@ -55,48 +55,9 @@ int main() {
     Graphics::VAO vaoFloor(Graphics::VBO(bgVert, bgAttribLen, GL_STATIC_DRAW),
                            Graphics::EBO(indices));
 
-    std::array<GLuint, 2> textures;
-    glGenTextures(textures.size(), &textures[0]);
-    glBindTexture(GL_TEXTURE_2D, textures[0]);
-    // Wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // Filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    Graphics::Texture texFloor("../tengin/src/resources/textures/sand_floor.jpg", GL_RGB);
+    Graphics::Texture texTank("../tengin/src/resources/textures/green_tank.png", GL_RGBA);
 
-    // Load & generate textures
-    int width, height, nrChannels;
-    unsigned char* data =
-        stbi_load("../tengin/src/resources/textures/sand_floor.jpg", &width,
-                  &height, &nrChannels, 0);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                     GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-
-    glBindTexture(GL_TEXTURE_2D, textures[1]);
-    // Wrapping parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // Filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    data = stbi_load("../tengin/src/resources/textures/green_tank.png", &width,
-                     &height, &nrChannels, STBI_rgb_alpha);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
     shader.setInt("texture1", 0);
 
     shader.use();
@@ -137,8 +98,7 @@ int main() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // Draw floor
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[0]);
+        texFloor.draw(GL_TEXTURE0);
 
         vaoFloor.bind();
         glm::mat4 model = glm::mat4(1.0f);
@@ -147,8 +107,7 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // Draw tank
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textures[1]);
+        texTank.draw(GL_TEXTURE0);
 
         player1.draw(shader);
         text.RenderText("This is sample text", 25.0f, 25.0f, 1.0f,
