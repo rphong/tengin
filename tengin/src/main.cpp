@@ -13,6 +13,7 @@
 #include <cassert>
 
 #include "entities/tank.hpp"
+#include "entities/wall.hpp"
 #include "graphics/textRenderer.hpp"
 #include "graphics/texture.hpp"
 
@@ -70,6 +71,8 @@ int main() {
     shader.setMat4("view", view);
 
     Tank player1(glm::vec2(0.0f, 0.0f));
+    Wall wall1(glm::vec2(1.0f, 1.0f));
+
     float deltaTime = 0.0f, lastFrame = 0.0f;
     float FPSDisplayRate = 0.0f;
     float totalFrames = 0.0f;
