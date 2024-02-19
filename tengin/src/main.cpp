@@ -16,6 +16,7 @@
 #include "entities/wall.hpp"
 #include "graphics/textRenderer.hpp"
 #include "graphics/texture.hpp"
+#include "ui/fps.hpp"
 
 constexpr glm::vec2 screenSize(1200, 800);
 
@@ -70,20 +71,16 @@ int main() {
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
 
+    FPS fps{};
     Tank player1(glm::vec2(0.0f, 0.0f));
     Wall wall1(glm::vec2(1.0f, 1.0f));
 
     float deltaTime = 0.0f, lastFrame = 0.0f;
-    float FPSDisplayRate = 0.0f;
-    float totalFrames = 0.0f;
-    float FPS = 0.0f;
 
     while (!glfwWindowShouldClose(window)) {
-        float currentFrame = static_cast<float>(glfwGetTime());
-        ++totalFrames;
+        const float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        FPSDisplayRate += deltaTime;
 
         // Input
         processInput(window, player1, deltaTime);
@@ -92,12 +89,14 @@ int main() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader.use();
-
         // Enable transparency
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // Show FPS
+        fps.draw(text, deltaTime);
+
+        shader.use();
         // Draw floor
         texFloor.draw(GL_TEXTURE0);
 
@@ -110,13 +109,6 @@ int main() {
         // Draw tank
         player1.draw(shader);
 
-        // FPS
-        text.RenderText(std::to_string(FPS), 25.0f, 25.0f, 1.0f,
-                        glm::vec3(0.5, 0.8f, 0.2f));
-        if (FPSDisplayRate >= 0.25) {
-            FPS = totalFrames/currentFrame;
-            FPSDisplayRate = 0;
-        }
         // Check and call events & swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();

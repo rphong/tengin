@@ -28,6 +28,7 @@ add_executable (${PROJECT_NAME}
 target_include_directories (${PROJECT_NAME} 
     PRIVATE
         tengin/vendor/include
+        tengin/vendor/include/glad
         tengin/vendor/include/freetype2
 )                        
 
