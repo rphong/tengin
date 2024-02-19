@@ -15,8 +15,8 @@ VAO::VAO(VBO&& vbo) : m_vbo(std::move(vbo)), m_numIndices(0) {
 
 VAO::VAO(VBO&& vbo, EBO&& ebo)
     : m_vbo(std::move(vbo)),
-      m_numIndices(ebo.getNumIndices()),
-      m_ebo(std::move(ebo)) {
+      m_ebo(std::move(ebo)),
+      m_numIndices(ebo.getNumIndices()) {
     calcVerticesCount();
 
     glGenVertexArrays(1, &m_id);
@@ -27,11 +27,11 @@ VAO::VAO(VBO&& vbo, EBO&& ebo)
 VAO::~VAO() { release(); }
 
 VAO::VAO(VAO&& other)
-    : m_id(other.m_id),
-      m_vbo(std::move(other.m_vbo)),
+    : m_vbo(std::move(other.m_vbo)),
       m_ebo(std::move(other.m_ebo)),
       m_numVertices(other.m_numVertices),
-      m_numIndices(other.m_numIndices) {
+      m_numIndices(other.m_numIndices),
+      m_id(other.m_id) {
     other.m_id = 0;
 }
 
@@ -56,7 +56,7 @@ void VAO::setVertexBuffer() const {
         std::accumulate(attributes.begin(), attributes.end(), 0);
     int offset = 0;
 
-    for (int i = 0; i < attributes.size(); ++i) {
+    for (size_t i = 0; i < attributes.size(); ++i) {
         glVertexAttribPointer(i, attributes[i], GL_FLOAT, GL_FALSE,
                               stride * sizeof(float),
                               (void*)(offset * sizeof(float)));
@@ -67,7 +67,8 @@ void VAO::setVertexBuffer() const {
 
 void VAO::setVertexSubBuffer(const std::vector<float>& vertices) const {
     m_vbo.bind();
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), &vertices[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float),
+                    &vertices[0]);
 }
 
 void VAO::setElementBuffer() const {

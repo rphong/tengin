@@ -22,10 +22,6 @@ constexpr glm::vec2 screenSize(1200, 800);
 
 void processInput(GLFWwindow* window, Tank& player1, const float& delta);
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, height, width);
-}
-
 int main() {
     assert(glfwInit());
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -37,7 +33,10 @@ int main() {
     assert(window);
 
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(
+        window, [](GLFWwindow* window, int width, int height) {
+            glViewport(0, 0, height, width);
+        });
     assert(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress));
 
     Graphics::Shader shader("../tengin/src/shaders/entity.vertex.glsl",

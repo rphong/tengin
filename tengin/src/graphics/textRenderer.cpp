@@ -6,10 +6,10 @@
 using Graphics::TextRenderer;
 
 TextRenderer::TextRenderer(const glm::vec2& screenSize)
-    : m_screenSize(screenSize),
+    : m_shader("../tengin/src/shaders/textRenderer.vertex.glsl",
+               "../tengin/src/shaders/textRenderer.frag.glsl"),
       m_VAO(Graphics::VBO(24, std::vector<int>{4}, GL_DYNAMIC_DRAW)),
-      m_shader("../tengin/src/shaders/textRenderer.vertex.glsl",
-               "../tengin/src/shaders/textRenderer.frag.glsl") {
+      m_screenSize(screenSize) {
     m_shader.use();
     m_shader.setMat4("projection",
                      glm::ortho(0.0f, static_cast<float>(screenSize.x), 0.0f,
@@ -22,8 +22,8 @@ void TextRenderer::loadCharacters() {
     FT_Face face;
 
     assert(!FT_Init_FreeType(&ft));
-    assert(!FT_New_Face(ft, "../tengin/src/resources/fonts/Roboto-Medium.ttf", 0,
-                &face));
+    assert(!FT_New_Face(ft, "../tengin/src/resources/fonts/Roboto-Medium.ttf",
+                        0, &face));
 
     FT_Set_Pixel_Sizes(face, 0, FONTSIZE);
 
@@ -45,8 +45,7 @@ void TextRenderer::loadCharacters() {
         setTextureOptions();
 
         Character character = {
-            texture,
-            glm::ivec2(glyph->bitmap.width, glyph->bitmap.rows),
+            texture, glm::ivec2(glyph->bitmap.width, glyph->bitmap.rows),
             glm::ivec2(glyph->bitmap_left, glyph->bitmap_top),
             static_cast<unsigned int>(glyph->advance.x)};
         m_characters.insert(std::pair<char, Character>(c, character));
@@ -73,12 +72,9 @@ void TextRenderer::RenderText(const std::string& text, float x, const float& y,
         const float w = ch.size.x * scale;
         const float h = ch.size.y * scale;
         const std::vector<float> vertices{
-            xpos,     ypos + h, 0.0f, 0.0f, 
-            xpos,     ypos,     0.0f, 1.0f,
-            xpos + w, ypos,     1.0f, 1.0f, 
-            xpos,     ypos + h, 0.0f, 0.0f,
-            xpos + w, ypos,     1.0f, 1.0f, 
-            xpos + w, ypos + h, 1.0f, 0.0f};
+            xpos,     ypos + h, 0.0f, 0.0f, xpos,     ypos,     0.0f, 1.0f,
+            xpos + w, ypos,     1.0f, 1.0f, xpos,     ypos + h, 0.0f, 0.0f,
+            xpos + w, ypos,     1.0f, 1.0f, xpos + w, ypos + h, 1.0f, 0.0f};
 
         // Render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, ch.textureID);

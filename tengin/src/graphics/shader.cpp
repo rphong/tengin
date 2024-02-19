@@ -33,7 +33,6 @@ Shader::Shader(const std::string& vertexPath, const std::string fragmentPath) {
 
     // Compile shaders
     int success;
-    char infoLog[512];
 
     const unsigned int vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);

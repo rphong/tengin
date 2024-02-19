@@ -30,10 +30,10 @@ class VAO {
    private:
     void calcVerticesCount();
     void release();
+    VBO m_vbo;
+    std::optional<EBO> m_ebo;
     size_t m_numVertices;
     size_t m_numIndices;
     GLuint m_id;
-    VBO m_vbo;
-    std::optional<EBO> m_ebo;
 };
 }  // namespace Graphics

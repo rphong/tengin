@@ -1,21 +1,19 @@
 #include "tank.hpp"
 
-const std::vector<float> vert = {
-    -0.1f, -0.1f, 0.0f, 0.0f, 0.0f, 
-    -0.1f,  0.1f, 0.0f, 0.0f, 1.0f,
-     0.1f,  0.1f, 0.0f, 1.0f, 1.0f, 
-     0.1f, -0.1f, 0.0f, 1.0f, 0.0f};
+const std::vector<float> vert = {-0.1f, -0.1f, 0.0f,  0.0f, 0.0f, -0.1f, 0.1f,
+                                 0.0f,  0.0f,  1.0f,  0.1f, 0.1f, 0.0f,  1.0f,
+                                 1.0f,  0.1f,  -0.1f, 0.0f, 1.0f, 0.0f};
 const std::vector<int> attribLen = {3, 2};
 const std::vector<GLuint> indices = {0, 1, 2, 2, 0, 3};
 
 Tank::Tank(const glm::vec2& pos, const float& angle, const float& speed)
-    : m_pos(pos),
+    : m_vao(Graphics::VAO(Graphics::VBO(vert, attribLen, GL_STATIC_DRAW),
+                          Graphics::EBO(indices))),
+      m_texture("../tengin/src/resources/textures/green_tank.png", GL_RGBA),
+      m_pos(pos),
       m_tankAngle(angle),
       m_barrelAngle(angle),
-      m_speed(speed),
-      m_texture("../tengin/src/resources/textures/green_tank.png", GL_RGBA),
-      m_vao(Graphics::VAO(Graphics::VBO(vert, attribLen, GL_STATIC_DRAW),
-            Graphics::EBO(indices))) {}
+      m_speed(speed) {}
 
 void Tank::draw(const Graphics::Shader& shader) const {
     m_vao.bind();

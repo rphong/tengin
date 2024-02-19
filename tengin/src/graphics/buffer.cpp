@@ -12,7 +12,8 @@ VBO::VBO(const std::vector<float>& vertices,
                  drawType);
 }
 
-VBO::VBO(const int& size, const std::vector<int>& attributeLengths, const int& drawType)
+VBO::VBO(const int& size, const std::vector<int>& attributeLengths,
+         const int& drawType)
     : m_attribLengths(attributeLengths) {
     glGenBuffers(1, &m_id);
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
@@ -22,9 +23,9 @@ VBO::VBO(const int& size, const std::vector<int>& attributeLengths, const int& d
 VBO::~VBO() { release(); }
 
 VBO::VBO(VBO&& other)
-    : m_id(other.m_id),
-      m_attribLengths(other.m_attribLengths),
-      m_numVertices(other.m_numVertices) {
+    : m_numVertices(other.m_numVertices),
+      m_id(other.m_id),
+      m_attribLengths(other.m_attribLengths) {
     other.m_id = 0;
 }
 
@@ -54,7 +55,7 @@ EBO::EBO(const std::vector<GLuint>& indices) : m_numIndices(indices.size()) {
 
 EBO::~EBO() { release(); }
 
-EBO::EBO(EBO&& other) : m_id(other.m_id), m_numIndices(other.m_numIndices) {
+EBO::EBO(EBO&& other) : m_numIndices(other.m_numIndices), m_id(other.m_id) {
     other.m_id = 0;
 }
 
