@@ -46,4 +46,4 @@ set_target_properties (${PROJECT_NAME}
         CXX_STANDARD_REQUIRED ON
 )
 
-target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
