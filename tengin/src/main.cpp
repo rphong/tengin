@@ -72,7 +72,10 @@ int main() {
 
     FPS fps{};
     Tank player1(glm::vec2(0.0f, 0.0f));
-    Wall wall1(glm::vec2(1.0f, 1.0f));
+    std::vector<Wall> walls;
+    for(float i = 0;i < 10;++i) {
+        walls.push_back(Wall(glm::vec2(0.5f + i/10, 1.0f)));
+    }
 
     float deltaTime = 0.0f, lastFrame = 0.0f;
 
@@ -107,6 +110,9 @@ int main() {
 
         // Draw tank
         player1.draw(shader);
+        for(const auto& wall: walls) {
+            wall.draw(shader);
+        }
 
         // Check and call events & swap buffers
         glfwSwapBuffers(window);
