@@ -26,7 +26,7 @@ class Tank {
             m_tankAngle -= 360.0f;
         }
     }
-    [[nodiscard]] glm::vec2 getPosition() const;
+    [[nodiscard]] constexpr glm::vec2 getPosition() const { return m_pos; }
     [[nodiscard]] constexpr float getRotation() const { return m_tankAngle; }
     [[nodiscard]] constexpr float getSpeed() const { return m_speed; }
 

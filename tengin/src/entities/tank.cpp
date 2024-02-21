@@ -39,5 +39,3 @@ void Tank::draw(const Graphics::Shader& shader) const {
         glDrawArrays(GL_TRIANGLES, 0, m_vao.getVerticesCount());
     }
 }
-
-[[nodiscard]] glm::vec2 Tank::getPosition() const { return m_pos; }
