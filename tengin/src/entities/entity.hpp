@@ -13,7 +13,7 @@ class Entity {
     constexpr Entity(const unsigned int& collisionLevel,
                      const std::vector<glm::vec2>& vert = {})
         : m_hitbox(vert), m_collisionLevel(collisionLevel){};
-    bool colldies(const Entity& other);
+    glm::vec2 colldies(const Entity& other);
 
     void constexpr setHitbox(const std::vector<glm::vec2>& hitbox) {
         m_hitbox = hitbox;
@@ -33,8 +33,11 @@ class Entity {
             min = low;
             max = high;
         }
-        [[nodiscard]] constexpr bool overlap(const Projection& o) {
-            return std::max(min, o.min) <= std::min(max, o.max);
+        [[nodiscard]] constexpr float overlap(const Projection& o) {
+            const float lower = std::max(min, o.min);
+            const float upper = std::min(max, o.max);
+
+            return lower <= upper ? upper - lower : 0;
         }
 
         float min;
@@ -44,7 +47,7 @@ class Entity {
                                      const glm::vec2& axis) const {
         const auto dotProducts = hitbox 
             | std::views::transform([&axis](const auto& pt) {
-                return std::abs(glm::dot(pt, axis));
+                return glm::dot(pt, axis);
             });
         return Projection(std::ranges::minmax(dotProducts));
     }

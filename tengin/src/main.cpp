@@ -118,7 +118,8 @@ int main() {
         shader.use();
         for(const auto& wall: walls) {
             glm::vec4 tint = {1.0f, 1.0f, 1.0f, 1.0f};
-            if(player1.colldies(wall)) {
+            const glm::vec2 mtv = player1.colldies(wall);
+            if(mtv != glm::vec2(0, 0)) {
                 tint = {1.0f, 0.0f, 0.0f, 0.5f};
             }
             wall.draw(shader, tint);
