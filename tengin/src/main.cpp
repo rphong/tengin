@@ -114,7 +114,6 @@ int main() {
 
         // Draw tank
         player1.draw(shader);
-        player1.updateHitbox();
         shader.use();
         for(const auto& wall: walls) {
             glm::vec4 tint = {1.0f, 1.0f, 1.0f, 1.0f};
