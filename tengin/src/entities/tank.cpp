@@ -29,8 +29,8 @@ void Tank::draw(const Graphics::Shader& shader) const {
     m_texture.draw(GL_TEXTURE0);
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
     model = glm::translate(model, glm::vec3(m_pos, 0.0f));
+    model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
     model = glm::rotate(model, glm::radians(m_tankAngle),
                         glm::vec3(0.0f, 0.0f, 1.0f));
     shader.setMat4("model", model);
