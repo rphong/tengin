@@ -13,11 +13,10 @@ const std::vector<GLuint> indices = {
 };
 
 Tank::Tank(const glm::vec2& pos, const float& angle, const float& speed)
-    : Entity(0),
+    : Entity(pos, 0),
       m_vao(Graphics::VAO(Graphics::VBO(vert, attribLen, GL_STATIC_DRAW),
                           Graphics::EBO(indices))),
       m_texture("../tengin/src/resources/textures/green_tank.png", GL_RGBA),
-      m_pos(pos),
       m_tankAngle(angle),
       m_barrelAngle(angle),
       m_speed(speed) {

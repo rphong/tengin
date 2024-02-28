@@ -35,10 +35,10 @@ class Tank : public Entity {
 
    private:
     void constexpr updateHitbox() {
-        setHitbox({rotatePoint({-0.05, -0.05}), rotatePoint({0.05, -0.05}),
-                   rotatePoint({0.05, 0.05}), rotatePoint({-0.05, 0.05})});
+        m_hitbox = {rotatePoint({-0.05, -0.05}), rotatePoint({0.05, -0.05}),
+                    rotatePoint({0.05, 0.05}), rotatePoint({-0.05, 0.05})};
     }
-    
+
     [[nodiscard]] constexpr glm::vec2 rotatePoint(const glm::vec2& pt) {
         return {
             m_pos.x + (pt.x * cos(glm::radians(m_tankAngle)) -
@@ -50,7 +50,6 @@ class Tank : public Entity {
 
     Graphics::VAO m_vao;
     Graphics::Texture m_texture;
-    glm::vec2 m_pos;
     float m_tankAngle;
     float m_barrelAngle;
     float m_speed;

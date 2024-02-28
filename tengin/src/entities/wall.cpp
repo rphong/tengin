@@ -12,15 +12,11 @@ const std::vector<GLuint> indices = {
     2, 0, 3
 };
 Wall::Wall(const glm::vec2& pos)
-    : Entity(0),
+    : Entity(pos, 0),
       m_vao(Graphics::VAO(Graphics::VBO(vert, attribLen, GL_STATIC_DRAW),
                           Graphics::EBO(indices))),
-      m_texture("../tengin/src/resources/textures/brick_wall.png", GL_RGBA),
-      m_pos(pos) {
-    setHitbox({{m_pos.x - 0.05, m_pos.y - 0.05},
-               {m_pos.x + 0.05, m_pos.y - 0.05},
-               {m_pos.x + 0.05, m_pos.y + 0.05},
-               {m_pos.x - 0.05, m_pos.y + 0.05}});
+      m_texture("../tengin/src/resources/textures/brick_wall.png", GL_RGBA) {
+    updateHitbox();
 }
 
 void Wall::draw(const Graphics::Shader& shader, const glm::vec4& tint) const {
@@ -38,5 +34,5 @@ void Wall::draw(const Graphics::Shader& shader, const glm::vec4& tint) const {
                        0);
     } else {
         glDrawArrays(GL_TRIANGLES, 0, m_vao.getVerticesCount());
-    }    
+    }
 }

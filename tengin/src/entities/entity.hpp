@@ -10,22 +10,26 @@
 
 class Entity {
    public:
-    constexpr Entity(const unsigned int& collisionLevel,
-                     const std::vector<glm::vec2>& vert = {})
-        : m_hitbox(vert), m_collisionLevel(collisionLevel){};
+    constexpr Entity(const glm::vec2& pos,
+                     const unsigned int& collisionLevel)
+        : m_pos(pos), m_collisionLevel(collisionLevel){};
+    void constexpr nudge(glm::vec2 translation) {
+        m_pos += translation;
+        updateHitbox();
+    }
     glm::vec2 colldies(const Entity& other);
 
    protected:
-    void constexpr setHitbox(const std::vector<glm::vec2>& hitbox) {
-        m_hitbox = hitbox;
-        m_hitbox.push_back(m_hitbox[0]);
-    }
+    void constexpr virtual updateHitbox() = 0;
     [[nodiscard]] constexpr std::vector<glm::vec2> getHitbox() const {
         return m_hitbox;
     }
     [[nodiscard]] constexpr unsigned int getCollisionLevel() const {
         return m_collisionLevel;
     }
+
+    glm::vec2 m_pos;
+    std::vector<glm::vec2> m_hitbox;
 
    private:
     struct Projection {
@@ -44,7 +48,7 @@ class Entity {
         float min;
         float max;
     };
-    
+
     [[nodiscard]] Projection project(const std::vector<glm::vec2>& hitbox,
                                      const glm::vec2& axis) const {
         const auto dotProducts =
@@ -54,6 +58,5 @@ class Entity {
         return Projection(std::ranges::minmax(dotProducts));
     }
 
-    std::vector<glm::vec2> m_hitbox;
     const unsigned int m_collisionLevel;
 };

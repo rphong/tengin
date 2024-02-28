@@ -112,17 +112,17 @@ int main() {
         shader.setMat4("model", model);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        // Draw tank
-        player1.draw(shader);
         shader.use();
         for(const auto& wall: walls) {
             glm::vec4 tint = {1.0f, 1.0f, 1.0f, 1.0f};
             const glm::vec2 mtv = player1.colldies(wall);
             if(mtv != glm::vec2(0, 0)) {
                 tint = {1.0f, 0.0f, 0.0f, 0.5f};
+                player1.nudge(mtv);
             }
             wall.draw(shader, tint);
         }
+        player1.draw(shader);
 
         // Check and call events & swap buffers
         glfwSwapBuffers(window);
