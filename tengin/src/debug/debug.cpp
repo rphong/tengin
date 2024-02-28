@@ -1,7 +1,11 @@
 #include "debug.hpp"
 
-const std::vector<float> squareVert = {-0.1f, -0.1f, 0.0f, -0.1f, 0.1f,  0.0f,
-                                       0.1f,  0.1f,  0.0f, 0.1f,  -0.1f, 0.0f};
+const std::vector<float> squareVert = {
+    -0.01f, -0.01f, 0.0f,
+    -0.01f,  0.01f, 0.0f,
+     0.01f,  0.01f, 0.0f,
+     0.01f, -0.01f, 0.0f
+};
 const std::vector<int> squareAttribLen = {3};
 const std::vector<GLuint> indices = {0, 1, 2, 2, 0, 3};
 
@@ -42,10 +46,10 @@ void Debug::drawPoints(const std::vector<glm::vec2>& pts,
     m_vaoSquare.bind();
     m_shader.use();
 
-    for (const auto& pt : pts) {
+    for (const glm::vec2& pt : pts) {
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::scale(model, glm::vec3(size, size, size));
         model = glm::translate(model, glm::vec3(pt, 0.0f));
+        model = glm::scale(model, glm::vec3(size, size, size));
         m_shader.setMat4("model", model);
         m_shader.setFloat4("color", color);
         glDrawElements(GL_TRIANGLES, m_vaoSquare.getIndicesCount(),
