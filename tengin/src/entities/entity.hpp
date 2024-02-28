@@ -15,6 +15,7 @@ class Entity {
         : m_hitbox(vert), m_collisionLevel(collisionLevel){};
     glm::vec2 colldies(const Entity& other);
 
+   protected:
     void constexpr setHitbox(const std::vector<glm::vec2>& hitbox) {
         m_hitbox = hitbox;
         m_hitbox.push_back(m_hitbox[0]);
@@ -43,10 +44,11 @@ class Entity {
         float min;
         float max;
     };
+    
     [[nodiscard]] Projection project(const std::vector<glm::vec2>& hitbox,
                                      const glm::vec2& axis) const {
-        const auto dotProducts = hitbox 
-            | std::views::transform([&axis](const auto& pt) {
+        const auto dotProducts =
+            hitbox | std::views::transform([&axis](const auto& pt) {
                 return glm::dot(pt, axis);
             });
         return Projection(std::ranges::minmax(dotProducts));

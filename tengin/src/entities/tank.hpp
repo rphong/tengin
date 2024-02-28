@@ -28,16 +28,17 @@ class Tank : public Entity {
             m_tankAngle -= 360.0f;
         }
     }
-    void constexpr updateHitbox() {
-        setHitbox({rotatePoint({-0.05, -0.05}), rotatePoint({0.05, -0.05}),
-                   rotatePoint({0.05, 0.05}), rotatePoint({-0.05, 0.05})});
-    }
 
     [[nodiscard]] constexpr glm::vec2 getPosition() const { return m_pos; }
     [[nodiscard]] constexpr float getRotation() const { return m_tankAngle; }
     [[nodiscard]] constexpr float getSpeed() const { return m_speed; }
 
    private:
+    void constexpr updateHitbox() {
+        setHitbox({rotatePoint({-0.05, -0.05}), rotatePoint({0.05, -0.05}),
+                   rotatePoint({0.05, 0.05}), rotatePoint({-0.05, 0.05})});
+    }
+    
     [[nodiscard]] constexpr glm::vec2 rotatePoint(const glm::vec2& pt) {
         return {
             m_pos.x + (pt.x * cos(glm::radians(m_tankAngle)) -
