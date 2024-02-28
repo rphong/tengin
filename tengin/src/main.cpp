@@ -69,12 +69,15 @@ int main() {
 
     shader.setMat4("projection", projection);
     shader.setMat4("view", view);
+    shader.setFloat4("tint", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
     FPS fps{};
     Tank player1(glm::vec2(0.0f, 0.0f));
+    Tank player2(glm::vec2(0.5f, 0.3f), 23.8f);
+    player1.colldies(player2);
     std::vector<Wall> walls;
     for(float i = 0;i < 10;++i) {
-        walls.push_back(Wall(glm::vec2(0.5f + i/10, 1.0f)));
+        walls.push_back(Wall(glm::vec2(0.25f + i/10, 0.5f)));
     }
 
     float deltaTime = 0.0f, lastFrame = 0.0f;
@@ -99,6 +102,7 @@ int main() {
         fps.draw(text, deltaTime);
 
         shader.use();
+
         // Draw floor
         texFloor.draw(GL_TEXTURE0);
 
@@ -110,8 +114,14 @@ int main() {
 
         // Draw tank
         player1.draw(shader);
+        player1.updateHitbox();
+        shader.use();
         for(const auto& wall: walls) {
-            wall.draw(shader);
+            glm::vec4 tint = {1.0f, 1.0f, 1.0f, 1.0f};
+            if(player1.colldies(wall)) {
+                tint = {1.0f, 0.0f, 0.0f, 0.5f};
+            }
+            wall.draw(shader, tint);
         }
 
         // Check and call events & swap buffers
