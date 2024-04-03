@@ -39,8 +39,8 @@ int main() {
                                  });
   assert(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress));
 
-  Graphics::Shader shader("../tengin/src/shaders/entity.vertex.glsl",
-                          "../tengin/src/shaders/entity.frag.glsl");
+  Graphics::Shader shader("../tengin/src/shaders/texture.vertex.glsl",
+                          "../tengin/src/shaders/texture.frag.glsl");
 
   Graphics::TextRenderer text(screenSize);
 
@@ -118,7 +118,6 @@ int main() {
       const glm::vec2 mtv = player1.colldies(wall);
       if (mtv != glm::vec2(0, 0)) {
         tint = {1.0f, 0.0f, 0.0f, 0.5f};
-        player1.nudge(mtv);
       }
       wall.draw(shader, tint);
     }
