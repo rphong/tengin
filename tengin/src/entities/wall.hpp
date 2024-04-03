@@ -10,18 +10,18 @@
 #include "../graphics/texture.hpp"
 
 class Wall : public Entity {
-   public:
-    Wall(const glm::vec2& pos);
-    void draw(const Graphics::Shader& shader, const glm::vec4& tint) const;
+ public:
+  Wall(const glm::vec2& pos);
+  void draw(const Graphics::Shader& shader, const glm::vec4& tint) const;
 
-   private:
-    void constexpr updateHitbox() {
-        m_hitbox = {{m_pos.x - 0.05, m_pos.y - 0.05},
-                    {m_pos.x + 0.05, m_pos.y - 0.05},
-                    {m_pos.x + 0.05, m_pos.y + 0.05},
-                    {m_pos.x - 0.05, m_pos.y + 0.05}};
-    }
+ private:
+  void constexpr updateHitbox() {
+    m_hitbox = {{m_pos.x - 0.05, m_pos.y - 0.05},
+                {m_pos.x + 0.05, m_pos.y - 0.05},
+                {m_pos.x + 0.05, m_pos.y + 0.05},
+                {m_pos.x - 0.05, m_pos.y + 0.05}};
+  }
 
-    Graphics::VAO m_vao;
-    Graphics::Texture m_texture;
+  Graphics::VAO m_vao;
+  Graphics::Texture m_texture;
 };

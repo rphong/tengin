@@ -16,27 +16,27 @@
 namespace Graphics {
 
 class TextRenderer {
-    struct Character {
-        // https://freetype.org/freetype2/docs/glyphs/glyph-metrics-3.svg
-        unsigned int textureID;
-        glm::ivec2 size;
-        glm::ivec2 bearing;
-        unsigned int advance;
-    };
+  struct Character {
+    // https://freetype.org/freetype2/docs/glyphs/glyph-metrics-3.svg
+    unsigned int textureID;
+    glm::ivec2 size;
+    glm::ivec2 bearing;
+    unsigned int advance;
+  };
 
-   public:
-    TextRenderer(const glm::vec2& screenSize);
-    void RenderText(const std::string& text, float x, const float& y,
-                    const float& scale, const glm::vec3& color);
+ public:
+  TextRenderer(const glm::vec2& screenSize);
+  void RenderText(const std::string& text, float x, const float& y,
+                  const float& scale, const glm::vec3& color);
 
-   private:
-    constexpr static unsigned int FONTSIZE = 48;
+ private:
+  constexpr static unsigned int FONTSIZE = 48;
 
-    void loadCharacters();
-    void setTextureOptions() const;
-    Graphics::Shader m_shader;
-    VAO m_VAO;
-    std::map<GLchar, Character> m_characters;
-    const glm::vec2 m_screenSize;
+  void loadCharacters();
+  void setTextureOptions() const;
+  Graphics::Shader m_shader;
+  VAO m_VAO;
+  std::map<GLchar, Character> m_characters;
+  const glm::vec2 m_screenSize;
 };
 }  // namespace Graphics
