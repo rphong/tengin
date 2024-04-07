@@ -67,6 +67,11 @@ glm::vec2 Entity::colldies(const Entity& other) {
     }
   }
 
+  if (glm::distance(m_pos + (mtvAxis * mtvOverlap), other.getPos()) <
+      glm::distance(m_pos, other.getPos())) {
+    mtvAxis = -mtvAxis;
+  }
+
   return mtvAxis * mtvOverlap;
 }
 

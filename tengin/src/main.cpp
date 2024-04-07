@@ -73,8 +73,6 @@ int main() {
 
   FPS fps{};
   Tank player1(glm::vec2(0.0f, 0.0f));
-  Tank player2(glm::vec2(0.5f, 0.3f), 23.8f);
-  player1.colldies(player2);
   std::vector<Wall> walls;
   for (float i = 0; i < 10; ++i) {
     walls.push_back(Wall(glm::vec2(0.25f + i / 10, 0.5f)));
@@ -104,6 +102,7 @@ int main() {
     shader.use();
 
     // Draw floor
+    shader.setFloat4("tint", {1, 1, 1, 1});
     texFloor.draw(GL_TEXTURE0);
 
     vaoFloor.bind();
@@ -118,6 +117,7 @@ int main() {
       const glm::vec2 mtv = player1.colldies(wall);
       if (mtv != glm::vec2(0, 0)) {
         tint = {1.0f, 0.0f, 0.0f, 0.5f};
+        player1.nudge(mtv);
       }
       wall.draw(shader, tint);
     }

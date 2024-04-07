@@ -5,7 +5,6 @@
 #include <vector>
 #include <cmath>
 #include <ranges>
-#include <iostream>
 #include <algorithm>
 
 class Entity {
@@ -22,6 +21,9 @@ class Entity {
   void constexpr virtual updateHitbox() = 0;
   [[nodiscard]] constexpr std::vector<glm::vec2> getHitbox() const {
     return m_hitbox;
+  }
+  [[nodiscard]] constexpr glm::vec2 getPos() const {
+    return m_pos;
   }
   [[nodiscard]] constexpr unsigned int getCollisionLevel() const {
     return m_collisionLevel;
