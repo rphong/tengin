@@ -17,8 +17,8 @@ struct Entity::Projection {
   float max;
 };
 
-glm::vec2 Entity::colldies(const Entity& other) {
-  const std::vector<glm::vec2> o_hitbox = other.getHitbox();
+glm::vec2 Entity::colldies(const Entity& other) const {
+  const std::vector<glm::vec2> o_hitbox = other.m_hitbox;
 
   const auto m_edges = m_hitbox | std::views::slide(2) |
                        std::views::transform([](const auto& pair) {
@@ -67,8 +67,8 @@ glm::vec2 Entity::colldies(const Entity& other) {
     }
   }
 
-  if (glm::distance(m_pos + (mtvAxis * mtvOverlap), other.getPos()) <
-      glm::distance(m_pos, other.getPos())) {
+  if (glm::distance(m_pos + (mtvAxis * mtvOverlap), other.m_pos) <
+      glm::distance(m_pos, other.m_pos)) {
     mtvAxis = -mtvAxis;
   }
 

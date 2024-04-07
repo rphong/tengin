@@ -15,20 +15,13 @@ class Entity {
     m_pos += translation;
     updateHitbox();
   }
-  glm::vec2 colldies(const Entity& other);
+  glm::vec2 colldies(const Entity& other) const;
 
  protected:
   void constexpr virtual updateHitbox() = 0;
-  [[nodiscard]] constexpr std::vector<glm::vec2> getHitbox() const {
-    return m_hitbox;
-  }
-  [[nodiscard]] constexpr glm::vec2 getPos() const {
-    return m_pos;
-  }
   [[nodiscard]] constexpr unsigned int getCollisionLevel() const {
     return m_collisionLevel;
   }
-
   glm::vec2 m_pos;
   std::vector<glm::vec2> m_hitbox;
 
