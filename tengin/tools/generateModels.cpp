@@ -3,12 +3,10 @@
 #include <iostream>
 #include <string_view>
 #include <vector>
-#include <tuple>
 #include <algorithm>
 #include <ranges>
 
-typedef std::tuple<float, float, float> vec3;
-typedef std::tuple<float, float> vec2;
+typedef std::pair<float, float> vec2;
 
 constexpr std::string_view cwd =
     "C:\\Code\\Game-Engine\\tengin\\tengin\\src\\resources\\modelsRaw";
@@ -19,6 +17,7 @@ const std::vector<std::string> splitStr(const std::string& str,
                                         const char& delimeter);
 const std::vector<float> stringToFloatVec(
     const std::vector<std::string>& strVec);
+std::vector<vec2> getHitbox(const std::vector<float>& vertices);
 
 int main() {
   std::filesystem::current_path(std::filesystem::path(cwd));
@@ -69,9 +68,16 @@ int main() {
       }
     }
 
+    const std::vector<vec2> hitbox = getHitbox(vertices);
+
     outs << "#pragma once\n\n#include <glm/glm.hpp>\n\n#include <vector>\n\n";
     outs << "class " << modelName << " {\n";
     outs << " public:\n";
+    outs << "  const std::vector<glm::vec2> hitbox = {";
+    for(const vec2& pt: hitbox) {
+      outs << "\n      {" << pt.first << ", " << pt.second <<  "},";
+    }
+    outs << "\n  };\n";
     outs << "  const std::vector<float> vertices = {";
     for (int j = 0; j < vertices.size(); ++j) {
       if (j % 3 == 0) outs << "\n      ";
@@ -134,4 +140,38 @@ const std::vector<float> stringToFloatVec(
   std::transform(strVec.begin(), strVec.end(), res.begin(),
                  [](const std::string& val) { return std::stof(val); });
   return res;
+}
+
+float cross_product(vec2 O, vec2 A, vec2 B) {
+  return (A.first - O.first) * (B.second - O.second) -
+         (A.second - O.second) * (B.first - O.first);
+}
+
+std::vector<vec2> getHitbox(const std::vector<float>& vertices) {
+  size_t k = 0, n = vertices.size() / 3;
+  std::vector<vec2> points;
+  std::vector<vec2> hitbox((n - 1) * 2);
+  for (size_t i = 0; i < vertices.size(); i += 3) {
+    points.emplace_back(vertices[i], vertices[i + 2]);
+  };
+
+  std::sort(points.begin(), points.end(), [](const vec2& l, const vec2& r) {
+    return l.first < r.first || (l.first == r.first && l.second < l.second);
+  });
+
+  for (const vec2& point : points) {
+    while (k >= 2 && cross_product(hitbox[k - 2], hitbox[k - 1], point) <= 0)
+      k--;
+    hitbox[k++] = point;
+  }
+
+  for (size_t i = n - 1, t = k + 1; i > 0; --i) {
+    while (k >= t &&
+           cross_product(hitbox[k - 2], hitbox[k - 1], points[i - 1]) <= 0)
+      k--;
+    hitbox[k++] = points[i - 1];
+  }
+
+  hitbox.resize(k);
+  return hitbox;
 }
